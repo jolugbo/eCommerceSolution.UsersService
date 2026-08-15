@@ -47,7 +47,7 @@ internal class UsersService : IUsersService
         }
         return _mapper.Map<AuthenticationResponse>(registeredUser) with {
             Success = true,
-            Token = "Token"
+            Token = "Token" 
         };
     }
 }
