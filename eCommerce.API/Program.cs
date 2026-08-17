@@ -1,8 +1,10 @@
-using eCommerce.Infrastructure;
-using eCommerce.Core;
 using eCommerce.API.Middlewares;
-using System.Text.Json.Serialization;
+using eCommerce.Core;
 using eCommerce.Core.Mappers;
+using eCommerce.Core.Validators;
+using eCommerce.Infrastructure;
+using FluentValidation.AspNetCore;
+using System.Text.Json.Serialization;
 //using eCommerce.Core.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,7 @@ builder.Services.AddControllers().AddJsonOptions(
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 builder.Services.AddAutoMapper(cfg => { }, typeof(ApplicationUserMappingProfile).Assembly);
+builder.Services.AddFluentValidationAutoValidation();
 var app = builder.Build();
 app.UseExceptionHandlingMiddleware();
 app.UseRouting();

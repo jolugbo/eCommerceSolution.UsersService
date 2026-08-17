@@ -1,5 +1,8 @@
 ﻿using eCommerce.Core.ServiceContracts;
 using eCommerce.Core.Services;
+using eCommerce.Core.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -21,6 +24,7 @@ public static class DependencyInjection
         // Add your infrastructure services to the service container eg. data context, caching and logging services, etc. 
         
         services.AddTransient<IUsersService, UsersService>();
+        services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
         return services;
     }
 }

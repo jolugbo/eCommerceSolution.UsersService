@@ -27,14 +27,9 @@ internal class UsersRepository : IUserRepository
 
     public async Task<ApplicationUser?> GetUserByEmailAndPassword(string? email, string? password)
     {
-        string query = "SELECT  * FROM public.\"Users\" where";
-        return new ApplicationUser()
-        {
-            UserId = Guid.NewGuid(),
-            Email = email,
-            PersonName = "John Doe",
-            Gender = "Male",
-            Password = password
-        };
+        var parameters = new { Email = email,Password = password };
+        string query = "SELECT  * FROM public.\"Users\" where \"Email\"=@Email And \"Password\"=@Password";
+        ApplicationUser? user = await _dbContext.DbConnection.QueryFirstOrDefaultAsync<ApplicationUser>(query, parameters);
+        return user;
     }
 }
