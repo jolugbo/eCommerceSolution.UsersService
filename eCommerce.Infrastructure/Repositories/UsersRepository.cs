@@ -6,7 +6,7 @@ using eCommerce.Infrastructure.DBContext;
 
 namespace eCommerce.Infrastructure.Repositories;
 
-internal class UsersRepository : IUserRepository
+public class UsersRepository : IUserRepository
 {
     private DapperDbContext _dbContext;
     public UsersRepository(DapperDbContext dbContext)
@@ -27,8 +27,15 @@ internal class UsersRepository : IUserRepository
 
     public async Task<ApplicationUser?> GetUserByEmailAndPassword(string? email, string? password)
     {
-        var parameters = new { Email = email,Password = password };
+        var parameters = new { Email = email, Password = password };
         string query = "SELECT  * FROM public.\"Users\" where \"Email\"=@Email And \"Password\"=@Password";
+        ApplicationUser? user = await _dbContext.DbConnection.QueryFirstOrDefaultAsync<ApplicationUser>(query, parameters);
+        return user;
+    }
+    public async Task<ApplicationUser?> GetUserByUserID(Guid? userID)
+    {
+        var parameters = new { UserId = userID };
+        string query = "SELECT  * FROM public.\"Users\" where \"UserId\"=@UserId";
         ApplicationUser? user = await _dbContext.DbConnection.QueryFirstOrDefaultAsync<ApplicationUser>(query, parameters);
         return user;
     }
