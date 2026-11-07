@@ -10,12 +10,6 @@ public  class DapperDbContext
     public DapperDbContext(IConfiguration configuration)
     {
         // Initialize your Dapper database context here
-        string connectionStringTemplate = configuration.GetConnectionString("PostgresConnection")!;
-        string connectionString = connectionStringTemplate.Replace("$POSTGRES_HOST",
-            Environment.GetEnvironmentVariable("POSTGRES_HOST")).
-            Replace("$POSTGRES_PASSWORD",
-            Environment.GetEnvironmentVariable("POSTGRES_PASSWORD"));
-
         _configuration = configuration;
         string? connectionStringTemplate = _configuration.GetConnectionString("PostgresConnection")!;
         string connectionString = Environment.ExpandEnvironmentVariables(connectionStringTemplate).Replace("$POSTGRES_HOST", _configuration["POSTGRES_HOST"])
