@@ -4,19 +4,18 @@
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 9090
+EXPOSE 9091
 
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["eCommerce.API/eCommerce.API.csproj", "eCommerce.API/"]
-RUN dotnet restore "./eCommerce.API/eCommerce.API.csproj"
 COPY . .
 WORKDIR "/src/eCommerce.API"
-RUN dotnet build "./eCommerce.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet restore "eCommerce.API.csproj"
+RUN dotnet build "eCommerce.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
@@ -27,4 +26,6 @@ RUN dotnet publish "./eCommerce.API.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+ENV POSTGRES_HOST=localhost
+ENV POSTGRES_PASSWORD=admin
 ENTRYPOINT ["dotnet", "eCommerce.API.dll"]
