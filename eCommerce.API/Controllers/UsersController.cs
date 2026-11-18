@@ -16,6 +16,8 @@ public class UsersController : ControllerBase
     [HttpGet("{userID}")]
     public async Task<IActionResult> GetUserByUserID(Guid? userID)
     {
+        await Task.Delay(100);
+        throw new NotImplementedException();
         if (userID == null || userID == Guid.Empty)
         {
             return BadRequest("Invalid userID");
