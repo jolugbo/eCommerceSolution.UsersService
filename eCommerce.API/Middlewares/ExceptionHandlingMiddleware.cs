@@ -30,10 +30,17 @@ public class ExceptionHandlingMiddleware
                 _logger.LogError($"Inner Exception:{ex.InnerException.GetType().ToString()} : {ex.InnerException.Message}",
                LogLevel.Error);
 
-                httpContext.Response.StatusCode = 500;
-                await httpContext.Response.WriteAsJsonAsync(
-                    new { Message = ex.Message, Type = ex.GetType().ToString() }
-                    );
+            }
+
+            if (!httpContext.Response.HasStarted)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+                await httpContext.Response.WriteAsJsonAsync(new
+                {
+                    Message = ex.Message,
+                    Type = ex.GetType().ToString()
+                });
             }
         }
 
